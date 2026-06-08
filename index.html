@@ -38,6 +38,22 @@ footer{margin-top:34px;padding-top:12px;border-top:1px solid var(--line);font-si
 .fbtn{border:1px solid var(--strong);background:transparent;color:var(--soft);border-radius:999px;padding:6px 13px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit}
 .fbtn:hover{border-color:var(--ink);color:var(--ink)}
 .fbtn.on{background:var(--ink);border-color:var(--ink);color:var(--paper,#FAF6EF)}
+.cb{appearance:none;-webkit-appearance:none;flex:0 0 auto;width:18px;height:18px;border:1.6px solid var(--strong);border-radius:5px;background:var(--card);cursor:pointer;margin-top:1px;position:relative}
+.cb:checked{background:var(--check);border-color:var(--check)}
+.cb:checked::after{content:"";position:absolute;left:5px;top:1px;width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+li.chk{display:flex;align-items:flex-start;gap:9px;cursor:pointer}
+li.chk.plain{padding:6px 9px;border:1px solid var(--line);background:var(--card);border-radius:9px}
+li.chk.plain::before{content:none}
+li.chk .txt{flex:1}
+li.chk.done .txt{text-decoration:line-through;text-decoration-color:var(--faint);color:var(--faint)}
+li.chk.done .dot{opacity:.4}
+li.chk.done{background:#F6F2E9}
+#progress{display:flex;align-items:center;gap:10px;margin:2px 0 16px}
+#plabel{font-size:12px;font-weight:700;color:var(--soft);white-space:nowrap;min-width:96px}
+#pbar{flex:1;height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+#pfill{height:100%;width:0;background:var(--check);transition:width .25s}
+#preset{border:1px solid var(--strong);background:transparent;color:var(--soft);border-radius:99px;padding:5px 12px;font-size:11.5px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
+#preset:hover{border-color:var(--ink);color:var(--ink)}
 </style>
 </head>
 <body>
@@ -142,7 +158,7 @@ footer{margin-top:34px;padding-top:12px;border-top:1px solid var(--line);font-si
 
 <h2>§6 · Пакет за терминот за NIE (Деница, Барселона, следна недела)</h2>
 <p>Понеси:</p>
-<ul>
+<ul id="niepack">
 <li class="plain">Потврда за закажаниот термин (cita previa), испечатена</li>
 <li class="plain"><b>Нов формулар EX-15 ×2, со денешен датум</b> — три клучни полиња: штиклирај <b>„NO reside en España“</b> · напиши го <b>постоечкиот</b> NIE број · причина: <i>„intereses económicos — compra de vivienda (contrato de arras adjunto)“</i></li>
 <li class="plain">Пасош + фотокопија · фотокопија од старата TIE картичка</li>
@@ -231,6 +247,55 @@ Calle Cid 9 · точен превод на 1_PLAN.md · правни инфор
     });
   }
   build();apply();
+})();
+(function(){
+  var KEY='ccid9-mk-plan-checklist';
+  var items=[].slice.call(document.querySelectorAll('#weeks li, #niepack li'));
+  var store={};
+  try{store=JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){store={};}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(store));}catch(e){}}
+  function hash(s){var h=5381,i=s.length;while(i){h=(h*33)^s.charCodeAt(--i);}return (h>>>0).toString(36);}
+  var fill,label;
+  function update(){
+    var done=0;
+    items.forEach(function(li){if(li.classList.contains('done'))done++;});
+    var pct=items.length?Math.round(done/items.length*100):0;
+    if(fill)fill.style.width=pct+'%';
+    if(label)label.textContent=done+' / '+items.length+' завршено';
+  }
+  items.forEach(function(li){
+    var txt=document.createElement('span');txt.className='txt';
+    while(li.firstChild)txt.appendChild(li.firstChild);
+    var clone=txt.cloneNode(true);
+    [].forEach.call(clone.querySelectorAll('.dot'),function(x){x.parentNode.removeChild(x);});
+    var taskText=clone.textContent.replace(/\s+/g,' ').trim();
+    var def=/^✓/.test(taskText);
+    if(def){txt.innerHTML=txt.innerHTML.replace('✓','');}
+    var key=hash(taskText.replace(/^✓\s*/,''));
+    var cb=document.createElement('input');cb.type='checkbox';cb.className='cb';
+    li.className+=(li.className?' ':'')+'chk';
+    li.appendChild(cb);li.appendChild(txt);
+    var on=(key in store)?store[key]:def;
+    cb.checked=on;if(on)li.classList.add('done');
+    function toggle(){li.classList.toggle('done',cb.checked);store[key]=cb.checked;save();update();}
+    cb.addEventListener('click',function(e){e.stopPropagation();toggle();});
+    li.addEventListener('click',function(e){if(e.target===cb)return;cb.checked=!cb.checked;toggle();});
+  });
+  var weeks=document.getElementById('weeks');
+  var prog=document.createElement('div');prog.id='progress';
+  label=document.createElement('span');label.id='plabel';
+  var bar=document.createElement('div');bar.id='pbar';
+  fill=document.createElement('div');fill.id='pfill';bar.appendChild(fill);
+  var reset=document.createElement('button');reset.id='preset';reset.textContent='Ресетирај';
+  reset.onclick=function(){
+    if(!window.confirm('Да ги исчистам сите штиклирања?'))return;
+    store={};save();
+    items.forEach(function(li){li.classList.remove('done');var c=li.querySelector('.cb');if(c)c.checked=false;});
+    update();
+  };
+  prog.appendChild(label);prog.appendChild(bar);prog.appendChild(reset);
+  weeks.parentNode.insertBefore(prog,weeks);
+  update();
 })();
 </script>
 </body>
