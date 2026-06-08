@@ -10,7 +10,7 @@
  --line:#E7DECF;--strong:#D8CCB7;--warn:#A33B2E;--lock:#9A6A2E;--check:#4E7D5A;
  --D:#BE6234;--A:#2E6A71;--V:#8A5A83;--Z:#5B6E2E;--E:#7A4A2E;--P:#2E4A7A}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--paper);color:var(--ink);font-family:'Hanken Grotesk','Segoe UI',-apple-system,system-ui,sans-serif;line-height:1.5;padding:26px 18px 80px;max-width:780px;margin:0 auto}
+body{background:var(--paper);color:var(--ink);font-family:'Hanken Grotesk','Segoe UI',-apple-system,system-ui,sans-serif;line-height:1.5;padding:26px 18px 90px;max-width:780px;margin:0 auto}
 .kicker{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);font-weight:600}
 h1{font-family:Georgia,'Fraunces',serif;font-weight:500;font-size:30px;margin:6px 0 6px;letter-spacing:-.01em}
 .sub{font-size:13px;color:var(--soft);margin-bottom:6px}
@@ -54,9 +54,27 @@ li.chk.done{background:#F6F2E9}
 #pfill{height:100%;width:0;background:var(--check);transition:width .25s}
 #preset{border:1px solid var(--strong);background:transparent;color:var(--soft);border-radius:99px;padding:5px 12px;font-size:11.5px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
 #preset:hover{border-color:var(--ink);color:var(--ink)}
+#editbar{position:fixed;bottom:14px;right:14px;display:flex;gap:7px;z-index:50}
+#editbar button{font-family:inherit;font-size:12.5px;font-weight:600;border-radius:999px;padding:8px 15px;cursor:pointer;border:1px solid var(--strong);background:var(--card);color:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,.12)}
+#eb-edit{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+#eb-save{background:var(--check);color:#fff;border-color:var(--check);display:none}
+#eb-cancel{display:none}
+.editbanner{position:fixed;left:0;right:0;top:0;background:var(--A);color:#fff;text-align:center;font-size:12.5px;font-weight:600;padding:7px 10px;z-index:49;display:none}
+body.editmode .editbanner{display:block}
+body.editmode{padding-top:44px}
+body.editmode [contenteditable="true"]{outline:1px dashed var(--A);outline-offset:3px;border-radius:4px}
+body.editmode [contenteditable="true"]:focus{outline:2px solid var(--A);background:#fff}
+.secdel{display:block;border:1px solid var(--warn);background:#FBF1EE;color:var(--warn);border-radius:7px;padding:3px 10px;font-size:12px;font-weight:700;cursor:pointer;margin:22px 0 -6px;font-family:inherit}
 </style>
 </head>
 <body>
+<div id="editbar">
+<button id="eb-edit" type="button">✏️ Уреди</button>
+<button id="eb-save" type="button">💾 Зачувај онлајн</button>
+<button id="eb-cancel" type="button">Откажи</button>
+</div>
+<div class="editbanner">Режим на уредување: кликни на текст за да го смениш · 🗑 брише цела секција · потоа „Зачувај онлајн“ за да го видат сите</div>
+<div id="content">
 <div class="kicker">Calle Cid 9 · ПЛАНОТ · македонска верзија</div>
 <h1>ПЛАНОТ — Calle Cid 9</h1>
 <div class="sub">Едниот документ што се чита. Мејловите се во <b>2_EMAILS</b>, заедничкиот тракер во <b>3_TRACKER</b>. Ажурирано 4 јуни 2026. Правни информации, не правен совет — Edgar и Перо ги носат конечните одлуки.</div>
@@ -101,7 +119,7 @@ li.chk.done{background:#F6F2E9}
 
 <h3>Сега — Македонија, 4–8 јуни</h3>
 <ul>
-<li><span class="dot" style="background:var(--D)">Д</span><span class="dot" style="background:var(--A)">А</span><span class="dot" style="background:var(--V)">В</span><span class="dot" style="background:var(--Z)">Ж</span><span class="dot" style="background:var(--P)">П</span> ✓ Средба кај адвокатот — завршена 4 јуни: двата подароци преку Македонија; изводи + венчаница земени; овластување за потписот на Александар нацртано на шпански</li>
+<li class="seed-done"><span class="dot" style="background:var(--D)">Д</span><span class="dot" style="background:var(--A)">А</span><span class="dot" style="background:var(--V)">В</span><span class="dot" style="background:var(--Z)">Ж</span><span class="dot" style="background:var(--P)">П</span> Средба кај адвокатот — завршена 4 јуни: двата подароци преку Македонија; изводи + венчаница земени; овластување за потписот на Александар нацртано на шпански</li>
 <li><span class="dot" style="background:var(--P)">П</span> Перо му ја испраќа на Edgar пораката + документите (€9.500, патот чека, прашањето за подарокот на Александар, овластувањето, хонорар)</li>
 <li><span class="dot" style="background:var(--P)">П</span> Перо ↔ македонските банки: смее ли Деница да ја наполни <b>својата</b> шпанска сметка? — овој одговор го одредува патот</li>
 <li><span class="dot" style="background:var(--V)">В</span><span class="dot" style="background:var(--Z)">Ж</span><span class="dot" style="background:var(--P)">П</span> Договори за подарок кај нотар — <b>двајцата родители заедно</b> (венчаница = заеднички средства): → Деница <b>€100.000</b> и → Александар <b>€100.000</b> (резерва за доволно средства); прво договорите, потоа трансферите во <b>македонските</b> сметки на секого. Без ни збор за €9.500-те. Идеално: договорот и трансферот на Александар чекаат ОК од Edgar</li>
@@ -198,6 +216,7 @@ li.chk.done{background:#F6F2E9}
 <footer>
 Calle Cid 9 · точен превод на 1_PLAN.md · правни информации, не совет · интерактивниот тракер со штиклирање е 3_TRACKER.html · ажурирано 4 јуни 2026
 </footer>
+</div>
 <script>
 (function(){
   var NAMES=[['all','Сите',''],['D','Деница','Д'],['A','Александар','А'],['V','мама','В'],['Z','Живко','Ж'],['E','Edgar','E'],['P','Перо','П']];
@@ -246,6 +265,7 @@ Calle Cid 9 · точен превод на 1_PLAN.md · правни инфор
       nav.appendChild(b);
     });
   }
+  window.__resetFilter=function(){filter='all';build();apply();};
   build();apply();
 })();
 (function(){
@@ -269,9 +289,8 @@ Calle Cid 9 · точен превод на 1_PLAN.md · правни инфор
     var clone=txt.cloneNode(true);
     [].forEach.call(clone.querySelectorAll('.dot'),function(x){x.parentNode.removeChild(x);});
     var taskText=clone.textContent.replace(/\s+/g,' ').trim();
-    var def=/^✓/.test(taskText);
-    if(def){txt.innerHTML=txt.innerHTML.replace('✓','');}
-    var key=hash(taskText.replace(/^✓\s*/,''));
+    var def=li.classList.contains('seed-done');
+    var key=hash(taskText);
     var cb=document.createElement('input');cb.type='checkbox';cb.className='cb';
     li.className+=(li.className?' ':'')+'chk';
     li.appendChild(cb);li.appendChild(txt);
@@ -279,7 +298,7 @@ Calle Cid 9 · точен превод на 1_PLAN.md · правни инфор
     cb.checked=on;if(on)li.classList.add('done');
     function toggle(){li.classList.toggle('done',cb.checked);store[key]=cb.checked;save();update();}
     cb.addEventListener('click',function(e){e.stopPropagation();toggle();});
-    li.addEventListener('click',function(e){if(e.target===cb)return;cb.checked=!cb.checked;toggle();});
+    li.addEventListener('click',function(e){if(document.body.classList.contains('editmode'))return;if(e.target===cb)return;cb.checked=!cb.checked;toggle();});
   });
   var weeks=document.getElementById('weeks');
   var prog=document.createElement('div');prog.id='progress';
@@ -296,6 +315,114 @@ Calle Cid 9 · точен превод на 1_PLAN.md · правни инфор
   prog.appendChild(label);prog.appendChild(bar);prog.appendChild(reset);
   weeks.parentNode.insertBefore(prog,weeks);
   update();
+})();
+(function(){
+  var REPO='denicaz/calle-cid-9-plan', PATH='index.html', TKEY='ccid9-gh-token';
+  var HEAD=document.head.outerHTML;
+  var EDITBAR=document.getElementById('editbar').outerHTML;
+  var BANNER=document.querySelector('.editbanner').outerHTML;
+  var SCRIPTS=[].map.call(document.scripts,function(s){return s.outerHTML;}).join('\n');
+  var content=document.getElementById('content');
+  var bar=document.getElementById('editbar');
+  var editBtn=document.getElementById('eb-edit');
+  var saveBtn=document.getElementById('eb-save');
+  var cancelBtn=document.getElementById('eb-cancel');
+  var EDITABLE='h1,h2,h3,p,.sub,.kicker,.txt,td,.why,.gate,li.plain:not(.chk),footer';
+
+  function reverseEnhance(root){
+    var p=root.querySelector('#progress');if(p)p.parentNode.removeChild(p);
+    var fn=root.querySelector('#fnav');if(fn)fn.innerHTML='';
+    [].forEach.call(root.querySelectorAll('li.chk'),function(li){
+      var cb=li.querySelector('input.cb');if(cb)cb.parentNode.removeChild(cb);
+      var txt=li.querySelector('span.txt');
+      if(txt){while(txt.firstChild)li.insertBefore(txt.firstChild,txt);li.removeChild(txt);}
+      li.classList.remove('chk','done');
+      if(li.getAttribute('class')==='')li.removeAttribute('class');
+    });
+    [].forEach.call(root.querySelectorAll('.secdel'),function(e){e.parentNode.removeChild(e);});
+    [].forEach.call(root.querySelectorAll('[contenteditable]'),function(e){e.removeAttribute('contenteditable');});
+    [].forEach.call(root.querySelectorAll('[style]'),function(e){
+      var s=e.getAttribute('style')||'';
+      if(/display\s*:/.test(s)){e.style.removeProperty('display');if(!e.getAttribute('style'))e.removeAttribute('style');}
+    });
+  }
+  function buildFullHTML(){
+    if(window.__resetFilter)window.__resetFilter();
+    var clone=content.cloneNode(true);
+    reverseEnhance(clone);
+    return '<!DOCTYPE html>\n<html lang="mk">\n'+HEAD+'\n<body>\n'+EDITBAR+'\n'+BANNER+'\n'+clone.outerHTML+'\n'+SCRIPTS+'\n</body>\n</html>\n';
+  }
+  window.__exportHTML=buildFullHTML;
+
+  function addDeleteButtons(){
+    [].forEach.call(content.querySelectorAll('h2'),function(h){
+      if(h.previousElementSibling&&h.previousElementSibling.classList&&h.previousElementSibling.classList.contains('secdel'))return;
+      var b=document.createElement('button');
+      b.className='secdel';b.type='button';b.textContent='🗑 Избриши ја оваа секција';
+      b.onclick=function(e){
+        e.stopPropagation();
+        var title=h.textContent.replace(/\s+/g,' ').trim();
+        if(!window.confirm('Да ја избришам секцијата „'+title+'“?'))return;
+        var el=h.nextElementSibling;h.parentNode.removeChild(h);
+        while(el&&el.tagName!=='H2'){var nx=el.nextElementSibling;if(el.classList&&el.classList.contains('secdel')){el=nx;continue;}el.parentNode.removeChild(el);el=nx;}
+        b.parentNode.removeChild(b);
+      };
+      h.parentNode.insertBefore(b,h);
+    });
+  }
+  function removeDeleteButtons(){[].forEach.call(content.querySelectorAll('.secdel'),function(b){b.parentNode.removeChild(b);});}
+  function setEditing(on){
+    document.body.classList.toggle('editmode',on);
+    [].forEach.call(content.querySelectorAll(EDITABLE),function(e){
+      if(on)e.setAttribute('contenteditable','true');else e.removeAttribute('contenteditable');
+    });
+    [].forEach.call(content.querySelectorAll('.dot,.cb'),function(e){e.setAttribute('contenteditable','false');});
+    if(on)addDeleteButtons();else removeDeleteButtons();
+    editBtn.style.display=on?'none':'';
+    saveBtn.style.display=on?'':'none';
+    cancelBtn.style.display=on?'':'none';
+  }
+  editBtn.onclick=function(){setEditing(true);window.scrollTo(0,0);};
+  cancelBtn.onclick=function(){if(window.confirm('Да ги отфрлам незачуваните промени?'))location.reload();};
+
+  function b64(str){return btoa(unescape(encodeURIComponent(str)));}
+  function getToken(){
+    var t=localStorage.getItem(TKEY);
+    if(!t){
+      t=window.prompt('Залепи го твојот GitHub token (се чува само во овој прелистувач):');
+      if(t){t=t.trim();localStorage.setItem(TKEY,t);}
+    }
+    return t;
+  }
+  saveBtn.onclick=function(){
+    var token=getToken();
+    if(!token)return;
+    saveBtn.disabled=true;saveBtn.textContent='Се зачувува…';
+    var api='https://api.github.com/repos/'+REPO+'/contents/'+PATH;
+    var headers={'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};
+    var html=buildFullHTML();
+    fetch(api+'?ref=main',{headers:headers}).then(function(r){
+      if(r.status===401||r.status===403){throw new Error('AUTH');}
+      if(!r.ok)throw new Error('GET '+r.status);
+      return r.json();
+    }).then(function(j){
+      return fetch(api,{method:'PUT',headers:headers,body:JSON.stringify({message:'Уредување преку страницата',content:b64(html),sha:j.sha,branch:'main'})});
+    }).then(function(r){
+      if(r.status===401||r.status===403){throw new Error('AUTH');}
+      if(!r.ok)return r.text().then(function(t){throw new Error('PUT '+r.status+' '+t);});
+      saveBtn.disabled=false;saveBtn.textContent='💾 Зачувај онлајн';
+      setEditing(false);
+      window.alert('Зачувано! Промените ќе бидат видливи за сите за околу 1 минута (освежи ја страницата).');
+    }).catch(function(err){
+      saveBtn.disabled=false;saveBtn.textContent='💾 Зачувај онлајн';
+      if(String(err.message)==='AUTH'){
+        localStorage.removeItem(TKEY);
+        window.alert('Токенот не работи или нема дозвола. Исчистен е — кликни „Зачувај онлајн“ повторно за да залепиш нов.');
+      }else{
+        window.alert('Зачувувањето не успеа: '+err.message);
+      }
+    });
+  };
 })();
 </script>
 </body>
