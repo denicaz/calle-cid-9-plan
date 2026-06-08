@@ -378,9 +378,9 @@ Calle Cid 9 · точен превод на 1_PLAN.md · правни инфор
     });
     [].forEach.call(content.querySelectorAll('.dot,.cb'),function(e){e.setAttribute('contenteditable','false');});
     if(on)addDeleteButtons();else removeDeleteButtons();
-    editBtn.style.display=on?'none':'';
-    saveBtn.style.display=on?'':'none';
-    cancelBtn.style.display=on?'':'none';
+    editBtn.style.display=on?'none':'inline-block';
+    saveBtn.style.display=on?'inline-block':'none';
+    cancelBtn.style.display=on?'inline-block':'none';
   }
   editBtn.onclick=function(){setEditing(true);window.scrollTo(0,0);};
   cancelBtn.onclick=function(){if(window.confirm('Да ги отфрлам незачуваните промени?'))location.reload();};
